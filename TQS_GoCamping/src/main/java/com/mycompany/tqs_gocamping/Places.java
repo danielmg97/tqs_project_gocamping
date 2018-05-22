@@ -6,18 +6,21 @@
 package com.mycompany.tqs_gocamping;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -30,62 +33,39 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Places.findAll", query = "SELECT p FROM Places p")
     , @NamedQuery(name = "Places.findById", query = "SELECT p FROM Places p WHERE p.id = :id")
     , @NamedQuery(name = "Places.findByName", query = "SELECT p FROM Places p WHERE p.name = :name")
-    , @NamedQuery(name = "Places.findByPark", query = "SELECT p FROM Places p WHERE p.park = :park")
     , @NamedQuery(name = "Places.findByCapacity", query = "SELECT p FROM Places p WHERE p.capacity = :capacity")
     , @NamedQuery(name = "Places.findByPrice", query = "SELECT p FROM Places p WHERE p.price = :price")
-    , @NamedQuery(name = "Places.findByAvailable", query = "SELECT p FROM Places p WHERE p.available = :available")
     , @NamedQuery(name = "Places.findByDescription", query = "SELECT p FROM Places p WHERE p.description = :description")})
 public class Places implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @NotNull
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
+    @Size(max = 50)
     @Column(name = "name")
     private String name;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
-    @Column(name = "park")
-    private String park;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "capacity")
-    private int capacity;
-    @Basic(optional = false)
-    @NotNull
+    private Integer capacity;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "price")
-    private float price;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "available")
-    private int available;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 200)
+    private Float price;
+    @Size(max = 200)
     @Column(name = "description")
     private String description;
+    @OneToMany(mappedBy = "placeId")
+    private Collection<Reservations> reservationsCollection;
+    @JoinColumn(name = "park_id", referencedColumnName = "id")
+    @ManyToOne
+    private Parks parkId;
 
     public Places() {
     }
 
     public Places(Integer id) {
         this.id = id;
-    }
-
-    public Places(Integer id, String name, String park, int capacity, float price, int available, String description) {
-        this.id = id;
-        this.name = name;
-        this.park = park;
-        this.capacity = capacity;
-        this.price = price;
-        this.available = available;
-        this.description = description;
     }
 
     public Integer getId() {
@@ -104,36 +84,20 @@ public class Places implements Serializable {
         this.name = name;
     }
 
-    public String getPark() {
-        return park;
-    }
-
-    public void setPark(String park) {
-        this.park = park;
-    }
-
-    public int getCapacity() {
+    public Integer getCapacity() {
         return capacity;
     }
 
-    public void setCapacity(int capacity) {
+    public void setCapacity(Integer capacity) {
         this.capacity = capacity;
     }
 
-    public float getPrice() {
+    public Float getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(Float price) {
         this.price = price;
-    }
-
-    public int getAvailable() {
-        return available;
-    }
-
-    public void setAvailable(int available) {
-        this.available = available;
     }
 
     public String getDescription() {
@@ -142,6 +106,23 @@ public class Places implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @XmlTransient
+    public Collection<Reservations> getReservationsCollection() {
+        return reservationsCollection;
+    }
+
+    public void setReservationsCollection(Collection<Reservations> reservationsCollection) {
+        this.reservationsCollection = reservationsCollection;
+    }
+
+    public Parks getParkId() {
+        return parkId;
+    }
+
+    public void setParkId(Parks parkId) {
+        this.parkId = parkId;
     }
 
     @Override
