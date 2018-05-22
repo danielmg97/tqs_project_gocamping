@@ -6,18 +6,19 @@
 package com.mycompany.tqs_gocamping;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
@@ -35,32 +36,24 @@ public class Users implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @NotNull
     @Column(name = "uid")
     private Integer uid;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
+    @Size(max = 50)
     @Column(name = "name")
     private String name;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 50)
+    @Size(max = 50)
     @Column(name = "password")
     private String password;
+    @OneToMany(mappedBy = "uid")
+    private Collection<Parks> parksCollection;
 
     public Users() {
     }
 
     public Users(Integer uid) {
         this.uid = uid;
-    }
-
-    public Users(Integer uid, String name, String password) {
-        this.uid = uid;
-        this.name = name;
-        this.password = password;
     }
 
     public Integer getUid() {
@@ -85,6 +78,15 @@ public class Users implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @XmlTransient
+    public Collection<Parks> getParksCollection() {
+        return parksCollection;
+    }
+
+    public void setParksCollection(Collection<Parks> parksCollection) {
+        this.parksCollection = parksCollection;
     }
 
     @Override

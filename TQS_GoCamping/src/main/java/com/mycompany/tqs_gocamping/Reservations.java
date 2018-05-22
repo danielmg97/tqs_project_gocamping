@@ -10,9 +10,9 @@ import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -31,7 +31,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "Reservations.findAll", query = "SELECT r FROM Reservations r")
     , @NamedQuery(name = "Reservations.findById", query = "SELECT r FROM Reservations r WHERE r.id = :id")
-    , @NamedQuery(name = "Reservations.findByPlaceId", query = "SELECT r FROM Reservations r WHERE r.placeId = :placeId")
     , @NamedQuery(name = "Reservations.findByStart", query = "SELECT r FROM Reservations r WHERE r.start = :start")
     , @NamedQuery(name = "Reservations.findByFinish", query = "SELECT r FROM Reservations r WHERE r.finish = :finish")
     , @NamedQuery(name = "Reservations.findByPeople", query = "SELECT r FROM Reservations r WHERE r.people = :people")})
@@ -39,28 +38,21 @@ public class Reservations implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
+    @NotNull
     @Column(name = "id")
     private Integer id;
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "place_id")
-    private int placeId;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "start")
     @Temporal(TemporalType.TIMESTAMP)
     private Date start;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "finish")
     @Temporal(TemporalType.TIMESTAMP)
     private Date finish;
-    @Basic(optional = false)
-    @NotNull
     @Column(name = "people")
-    private int people;
+    private Integer people;
+    @JoinColumn(name = "place_id", referencedColumnName = "id")
+    @ManyToOne
+    private Places placeId;
 
     public Reservations() {
     }
@@ -69,28 +61,12 @@ public class Reservations implements Serializable {
         this.id = id;
     }
 
-    public Reservations(Integer id, int placeId, Date start, Date finish, int people) {
-        this.id = id;
-        this.placeId = placeId;
-        this.start = start;
-        this.finish = finish;
-        this.people = people;
-    }
-
     public Integer getId() {
         return id;
     }
 
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public int getPlaceId() {
-        return placeId;
-    }
-
-    public void setPlaceId(int placeId) {
-        this.placeId = placeId;
     }
 
     public Date getStart() {
@@ -109,12 +85,20 @@ public class Reservations implements Serializable {
         this.finish = finish;
     }
 
-    public int getPeople() {
+    public Integer getPeople() {
         return people;
     }
 
-    public void setPeople(int people) {
+    public void setPeople(Integer people) {
         this.people = people;
+    }
+
+    public Places getPlaceId() {
+        return placeId;
+    }
+
+    public void setPlaceId(Places placeId) {
+        this.placeId = placeId;
     }
 
     @Override
