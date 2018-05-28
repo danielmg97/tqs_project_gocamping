@@ -1,0 +1,16 @@
+com\mycompany\tqs_gocamping\Reservation.class
+com\mycompany\tqs_gocamping\ApplicationConfig.class
+com\mycompany\tqs_gocamping\service\ParkFacadeREST.class
+com\mycompany\tqs_gocamping\Place.class
+com\mycompany\tqs_gocamping\service\AbstractFacade.class
+com\mycompany\tqs_gocamping\Reservation_.class
+com\mycompany\tqs_gocamping\service\ReservationFacadeREST.class
+com\mycompany\tqs_gocamping\ParkClient.class
+com\mycompany\tqs_gocamping\service\PlaceFacadeREST.class
+com\mycompany\tqs_gocamping\Place_.class
+com\mycompany\tqs_gocamping\CampingManagedBean.class
+com\mycompany\tqs_gocamping\RESTResource.class
+com\mycompany\tqs_gocamping\Park_.class
+com\mycompany\tqs_gocamping\Park.class
+com\mycompany\tqs_gocamping\ReservationClient.class
+com\mycompany\tqs_gocamping\PlaceClient.class
