@@ -1,1 +1,1 @@
-# tqs_project_gocamping
+# TQS Project - GoCamping
