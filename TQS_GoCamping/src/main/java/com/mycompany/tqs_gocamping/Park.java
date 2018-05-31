@@ -136,7 +136,12 @@ public class Park implements Serializable {
 
     @Override
     public String toString() {
-        return "com.mycompany.tqs_gocamping.Park[ id=" + id + " ]";
+        return "<park>"
+                + "<id>"+id+"</id>"
+                + "<name>"+name+"</name>"
+                + "<address>"+address+"</address>"
+                + "<pic>"+pic+"</pic>"
+                + "</park>";
     }
     
 }
