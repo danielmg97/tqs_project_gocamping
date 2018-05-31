@@ -39,7 +39,13 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Place.findByCapacity", query = "SELECT p FROM Place p WHERE p.capacity = :capacity")
     , @NamedQuery(name = "Place.findByPrice", query = "SELECT p FROM Place p WHERE p.price = :price")
     , @NamedQuery(name = "Place.findByPic", query = "SELECT p FROM Place p WHERE p.pic = :pic")
-    , @NamedQuery(name = "Place.findByDescription", query = "SELECT p FROM Place p WHERE p.description = :description")})
+    , @NamedQuery(name = "Place.findByDescription", query = "SELECT p FROM Place p WHERE p.description = :description")
+        
+    ,@NamedQuery(name = "Place.findByJoinAddress", query = "SELECT p FROM Place p,Park pk WHERE pk.id = p.parkId.id AND pk.address LIKE :address")
+    ,@NamedQuery(name = "Place.findByJoinTypeAddress", query = "SELECT p FROM Place p,Park pk WHERE pk.id = p.parkId.id AND pk.address LIKE :address AND p.name=:type")
+    ,@NamedQuery(name = "Place.findByJoinTypePeople", query = "SELECT p FROM Place p,Park pk WHERE pk.id = p.parkId.id AND p.capacity=:capacity AND p.name=:type")
+    ,@NamedQuery(name = "Place.findByJoinTypeAddressPeople", query = "SELECT p FROM Place p,Park pk WHERE pk.id = p.parkId.id AND pk.address LIKE :address AND p.capacity=:capacity AND p.name=:type")
+    ,@NamedQuery(name = "Place.findByJoinAddressPeople", query = "SELECT p FROM Place p,Park pk WHERE pk.id = p.parkId.id AND pk.address LIKE :address AND p.capacity=:capacity")})
 public class Place implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -177,7 +183,15 @@ public class Place implements Serializable {
 
     @Override
     public String toString() {
-        return "com.mycompany.tqs_gocamping.Place[ id=" + id + " ]";
+        return "<place>"
+                + "<id>"+id+"</id>"
+                + "<name>"+name+"</name>"
+                + "<capacity>"+capacity+"</capacity>"
+                + "<pic>"+pic+"</pic>"
+                + "<parkId>"+parkId+"</parkId>"
+                + "<description>"+description+"</description>"
+                + "<price>"+price+"</price>"
+                + "</place>";
     }
     
 }

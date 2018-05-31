@@ -33,6 +33,7 @@ public class ApplicationConfig extends Application {
         resources.add(com.mycompany.tqs_gocamping.service.ParkFacadeREST.class);
         resources.add(com.mycompany.tqs_gocamping.service.PlaceFacadeREST.class);
         resources.add(com.mycompany.tqs_gocamping.service.ReservationFacadeREST.class);
+        resources.add(com.mycompany.tqs_gocamping.service.UserFacadeREST.class);
     }
     
 }

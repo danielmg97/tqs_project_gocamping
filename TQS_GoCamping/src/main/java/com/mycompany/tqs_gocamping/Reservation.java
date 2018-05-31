@@ -61,6 +61,9 @@ public class Reservation implements Serializable {
     @JoinColumn(name = "place_id", referencedColumnName = "id")
     @ManyToOne(optional = false)
     private Place placeId;
+    @JoinColumn(name = "uid", referencedColumnName = "uid")
+    @ManyToOne(optional = false)
+    private User uid;
 
     public Reservation() {
     }
@@ -116,6 +119,14 @@ public class Reservation implements Serializable {
         this.placeId = placeId;
     }
 
+    public User getUid() {
+        return uid;
+    }
+
+    public void setUid(User uid) {
+        this.uid = uid;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
@@ -138,7 +149,13 @@ public class Reservation implements Serializable {
 
     @Override
     public String toString() {
-        return "com.mycompany.tqs_gocamping.Reservation[ id=" + id + " ]";
+        return "<reservation>"
+                + "<id>"+id+"</id>"
+                + "<start>"+start+"</start>"
+                + "<finish>"+finish+"</finish>"
+                + "<people>"+people+"</people>"
+                + "<placeId>"+placeId+"</placeId>"
+                + "</reservation>";
     }
     
 }

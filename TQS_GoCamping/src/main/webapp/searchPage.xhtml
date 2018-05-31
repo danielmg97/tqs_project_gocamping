@@ -12,7 +12,8 @@
             <h:form>
                 <p:menubar>
                     <p:menuitem value="Home" url=""/>
-                    <p:menuitem value="About" url=""/>
+                    <p:menuitem value="Sign In" url=""/>
+                    <p:menuitem value="Sign Up" url=""/>
                     <f:facet name="options">
                         <p:outputLabel value="GoCamping &nbsp;&nbsp;" style="font-size: 23px;"/>
                         <span/>
@@ -22,16 +23,23 @@
         </div>
         <div style="margin: 0 auto; width:80%;">
             <h:form id="form" style="margin-top: 5%;">
-                <p:dataList value="#{CampingManagedBean.places}" var="Place" type="unordered" itemType="none" paginator="true" rows="10" styleClass="paginated">
+                <p:dataList value="#{CampingManagedBean.results}" var="Place" type="unordered" itemType="none" paginator="true" rows="10" styleClass="paginated">
                     <f:facet name="header">
                         Results
                     </f:facet>
                     <p:commandLink update="" oncomplete="" title="View Detail" styleClass="ui-icon ui-icon-search" style="float:left;margin-right:10px">
                         <f:setPropertyActionListener value="#{Place}" target="#{CampingManagedBean.selectedPlace}" />
-                        <h:outputText value="&nbsp;&nbsp;#{Place.name} #{Place.id}" />
                     </p:commandLink>
-                    <img src="#{Place.pic}" alt="" width="55" height="50"/>
-                    <h:outputText value="&nbsp;&nbsp;#{Place.name}, #{Place.id}, " style="display:inline-block"/>
+                    <img src="#{Place.pic}" style="margin-right: 50px; float: left;" alt="" width="200" height="150"/>
+                    <h:outputText value="Type: #{Place.name}" style="display:inline-block"/>
+                    <br/>
+                    <h:outputText value="Capacity: #{Place.capacity}" style="display:inline-block;"/>
+                    <br/>
+                    <h:outputText value="Description: #{Place.description}" style="display:inline-block;  width:40%;"/>
+                    <br/>
+                    <h:outputText value="Price: #{Place.price}" style="display:inline-block"/>
+                    <br/>
+                    <br/>
                 </p:dataList>
             </h:form>
         </div>

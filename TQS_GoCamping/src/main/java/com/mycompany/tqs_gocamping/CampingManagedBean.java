@@ -1,19 +1,18 @@
 package com.mycompany.tqs_gocamping;
 
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.WebResource;
 import java.io.IOException;
 import java.io.StringReader;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -23,18 +22,29 @@ import org.xml.sax.SAXException;
 @Named(value = "CampingManagedBean")
 @RequestScoped
 public class CampingManagedBean {
-    private List<String> types = new ArrayList<String>();
-    private String destination;
-    private String arrivalDate;
-    private String leavingDate;
-    private String type;
-    private int people;
+    private final List<String> types = new ArrayList<>();
+    List<Place> results = new ArrayList<>();
+   
+    private String destination=null;
+    private String arrivalDate=null;
+    private String leavingDate=null;
+    private String type=null;
+    private int people=0;
+    
+    private String user;
+    private String password;
+    private String email;
     
     private String selectedPlace;
 
     public CampingManagedBean() {
-       types.add("Casa");
-       types.add("Tenda");
+        types.add("Tenda");
+        types.add("Tenda Média");
+        types.add("Tenda Família");
+        types.add("Casa");
+        types.add("Casa Média");
+        types.add("Casa Família");
+
     } 
 
     public void setDestination(String destination){
@@ -57,25 +67,84 @@ public class CampingManagedBean {
     }
     public String getArrivalDate(){
         return arrivalDate;
-    }public String getLeavingDate(){
+    }
+    public String getLeavingDate(){
         return leavingDate;
-    }public String getType(){
+    }
+    public String getType(){
         return type;
-    }public int getPeople(){
+    }
+    public int getPeople(){
         return people;
     } 
     public List getTypes(){
         return types;
     }
+    public String getUser() {
+        return user;
+    }
+    public void setUser(String user) {
+        this.user = user;
+    }
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public String getSelectedPlace() {
+        return selectedPlace;
+    }
+    public void setSelectedPlace(String selectedPlace) {
+        this.selectedPlace = selectedPlace;
+    }
+    public List<Place> getResults() {
+        return results;
+    }
+    public void setResults(List<Place> results) {
+        this.results = results;
+    }
     
-    public String moveToSearchPage(){
+    public String moveToSearchPage() throws ParserConfigurationException, SAXException, IOException{
+        setResults(getPlaces());
         return "searchPage";
     }
     
     public List<Place> getPlaces() throws ParserConfigurationException, SAXException, IOException {
-        List<Place> places = new ArrayList<Place>();
-        PlaceClient pc = new PlaceClient();
-        String xmlRecords = pc.findAll_XML(String.class);
+        Client c = Client.create();
+        String xmlRecords = "";
+        if(destination!=null && type!=null){
+            WebResource wr = c.resource("http://deti-tqs-08.ua.pt:8080/TQS_GoCamping/webresources/camping/full/"+destination+"/"+arrivalDate+"/"+leavingDate+"/"+type+"/"+people);
+            xmlRecords = wr.get(String.class);
+        }
+        else if(destination!=null && type==null){
+            WebResource wr = c.resource("http://deti-tqs-08.ua.pt:8080/TQS_GoCamping/webresources/camping/noType/"+destination+"/"+arrivalDate+"/"+leavingDate+"/"+people);
+            xmlRecords = wr.get(String.class);
+        }
+        else if(destination==null && type!=null){
+            WebResource wr = c.resource("http://deti-tqs-08.ua.pt:8080/TQS_GoCamping/webresources/camping/noDestination/"+arrivalDate+"/"+leavingDate+"/"+type+"/"+people);
+            xmlRecords = wr.get(String.class);
+        }
+        else if(destination==null && type==null){
+            WebResource wr = c.resource("http://deti-tqs-08.ua.pt:8080/TQS_GoCamping/webresources/camping/nothing/"+arrivalDate+"/"+leavingDate+"/"+people);
+            xmlRecords = wr.get(String.class);
+        }
+        destination=null;
+        type=null;
+        arrivalDate=null;
+        leavingDate=null;
+        people=0;
+        return getResults(xmlRecords);
+    }
+    
+    public List<Place> getResults(String xmlRecords){
+        List<Place> places = new ArrayList<>();
         try{
             DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             InputSource is = new InputSource();
@@ -108,22 +177,13 @@ public class CampingManagedBean {
                     }
                     p.setParkId(pk);
                     p.setPic(eElement.getElementsByTagName("pic").item(0).getTextContent());
-                    //TODO meter isto na BD como FLOAT!!!!!!!!!!!!!
                     p.setPrice(Float.parseFloat(eElement.getElementsByTagName("price").item(0).getTextContent()));
                     places.add(p);
                 }
             }
-        }catch(Exception e){
+        }catch(IOException | NumberFormatException | ParserConfigurationException | DOMException | SAXException e){
         }
         return places;
-    }
-    
-    public String getSelectedPlace() {
-        return selectedPlace;
-    }
- 
-    public void setSelectedPlace(String selectedPlace) {
-        this.selectedPlace = selectedPlace;
-    }
+    } 
 }
 
