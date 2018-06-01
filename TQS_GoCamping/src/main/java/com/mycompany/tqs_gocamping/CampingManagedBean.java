@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Element;
 import javax.xml.parsers.DocumentBuilder;
@@ -31,9 +33,9 @@ public class CampingManagedBean {
     private String type=null;
     private int people=0;
     
-    private String user;
-    private String password;
-    private String email;
+    private String user = "";
+    private String password = "";
+    private String email = "";
     
     private String selectedPlace;
 
@@ -44,9 +46,44 @@ public class CampingManagedBean {
         types.add("Casa");
         types.add("Casa Média");
         types.add("Casa Família");
-
     } 
-
+    
+    public String register() throws IOException{
+        String redirect = null;
+        Client c = Client.create();
+        String output;
+        if(!this.user.equals("") && !this.password.equals("") && !this.email.equals("")){
+            WebResource wr = c.resource("http://deti-tqs-08.ua.pt:8080/TQS_GoCamping/webresources/camping/register/"+user+"/"+password+"/"+email);
+            output = wr.get(String.class);
+            if(output.equals("True"))
+                redirect = "index";
+            else
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"Error -","User already exists!"));
+        }
+        else{
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"Error -","Fill in the boxes!"));
+        }
+        return redirect;
+    }
+    
+    public String login() throws IOException{
+        String redirect = null;
+        Client c = Client.create();
+        String output;
+        if(!this.user.equals("") && !this.password.equals("")){
+            WebResource wr = c.resource("http://deti-tqs-08.ua.pt:8080/TQS_GoCamping/webresources/camping/login/"+user+"/"+password);
+            output = wr.get(String.class);
+            if(output.equals("True"))
+                redirect = "index";
+            else
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"Error -","Wrong credentials!"));
+        }
+        else{
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"Error -","Fill the boxes!"));
+        }
+        return redirect;
+    }
+    
     public void setDestination(String destination){
         this.destination=destination;
     }

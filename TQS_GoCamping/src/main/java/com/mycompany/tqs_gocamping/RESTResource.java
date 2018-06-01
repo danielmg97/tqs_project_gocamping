@@ -107,4 +107,43 @@ public class RESTResource {
         PlaceClient pc = new PlaceClient();
         return pc.findAll_XML(String.class);
     }
+    
+    @GET
+    @Path("login/{user}/{password}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getLogin(@PathParam("user") String user,
+                            @PathParam("password") String password) throws ClassNotFoundException {
+        
+        List<Place> results = em.createNamedQuery("User.findByLogin")
+                .setParameter("name", user)
+                .setParameter("password", password)
+                .getResultList();
+        if (results.size()>0){
+            return "True";
+        }
+        return "False";
+    }
+    
+    @GET
+    @Path("register/{user}/{password}/{email}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getRegister(@PathParam("user") String user,
+                            @PathParam("password") String password, 
+                            @PathParam("email") String email) throws ClassNotFoundException {
+        List<Place> results = em.createNamedQuery("User.findByRegister")
+                .setParameter("name", user)
+                .setParameter("password", password)
+                .setParameter("email", email)
+                .getResultList();
+        if(results.size()>0){
+            return "False";
+        }
+        UserClient pc = new UserClient();
+        pc.create_XML("<user>"
+                        + "<name>"+user+"</name>"
+                        + "<password>"+password+"</password>"
+                        + "<email>"+email+"</email>"
+                    + "</user>");
+        return "True";
+    }
 }

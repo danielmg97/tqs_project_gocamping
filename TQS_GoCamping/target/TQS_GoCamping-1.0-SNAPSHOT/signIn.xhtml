@@ -21,11 +21,13 @@
             </h:form>
         </div>
         <div align="center" style="margin-top: 20%;">
+            <p:messages autoUpdate="true" showDetail="true" style="width: 20%"/>
             <h:form>
                 <p:panel style="margin-left: 5%; margin-right: 5%; height:20%; background-color:#e8e8e8;">
                     <p:inputText value="#{CampingManagedBean.user}" placeholder="User"/>
                     <p:password value="#{CampingManagedBean.password}" placeholder="Password"/>
-                    <p:commandButton action = "#{CampingManagedBean.moveToSearchPage}" value="Login" style="margin-left: 10px;"/>
+                    <p:commandButton action = "#{CampingManagedBean.login()}" value="Login" style="margin-left: 10px;"/>
+                    <br/>
                 </p:panel>
             </h:form>
         </div>
