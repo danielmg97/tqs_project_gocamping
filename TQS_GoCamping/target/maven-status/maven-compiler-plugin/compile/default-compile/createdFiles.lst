@@ -9,10 +9,12 @@ com\mycompany\tqs_gocamping\service\ReservationFacadeREST.class
 com\mycompany\tqs_gocamping\ParkClient.class
 com\mycompany\tqs_gocamping\service\PlaceFacadeREST.class
 com\mycompany\tqs_gocamping\Place_.class
+com\mycompany\tqs_gocamping\UserClientFactory.class
 com\mycompany\tqs_gocamping\CampingManagedBean.class
 com\mycompany\tqs_gocamping\RESTResource.class
 com\mycompany\tqs_gocamping\Park_.class
 com\mycompany\tqs_gocamping\Park.class
+com\mycompany\tqs_gocamping\PlaceClientFactory.class
 com\mycompany\tqs_gocamping\ReservationClient.class
 com\mycompany\tqs_gocamping\User.class
 com\mycompany\tqs_gocamping\UserClient.class
