@@ -40,7 +40,8 @@ import javax.xml.bind.annotation.XmlTransient;
     , @NamedQuery(name = "Place.findByPrice", query = "SELECT p FROM Place p WHERE p.price = :price")
     , @NamedQuery(name = "Place.findByPic", query = "SELECT p FROM Place p WHERE p.pic = :pic")
     , @NamedQuery(name = "Place.findByDescription", query = "SELECT p FROM Place p WHERE p.description = :description")
-        
+    , @NamedQuery(name = "Place.findByRate", query = "SELECT p FROM Place p WHERE p.rate = :rate")
+
     ,@NamedQuery(name = "Place.findByJoinAddress", query = "SELECT p FROM Place p,Park pk WHERE pk.id = p.parkId.id AND pk.address LIKE :address")
     ,@NamedQuery(name = "Place.findByJoinTypeAddress", query = "SELECT p FROM Place p,Park pk WHERE pk.id = p.parkId.id AND pk.address LIKE :address AND p.name=:type")
     ,@NamedQuery(name = "Place.findByJoinTypePeople", query = "SELECT p FROM Place p,Park pk WHERE pk.id = p.parkId.id AND p.capacity=:capacity AND p.name=:type")
@@ -75,6 +76,10 @@ public class Place implements Serializable {
     @Size(min = 1, max = 200)
     @Column(name = "description")
     private String description;
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "rate")
+    private int rate;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "placeId")
     private Collection<Reservation> reservationCollection;
     @JoinColumn(name = "park_id", referencedColumnName = "id")
@@ -88,12 +93,13 @@ public class Place implements Serializable {
         this.id = id;
     }
 
-    public Place(Integer id, String name, int capacity, float price, String description) {
+    public Place(Integer id, String name, int capacity, float price, String description, int rate) {
         this.id = id;
         this.name = name;
         this.capacity = capacity;
         this.price = price;
         this.description = description;
+        this.rate = rate;
     }
 
     public Integer getId() {
@@ -144,6 +150,14 @@ public class Place implements Serializable {
         this.description = description;
     }
 
+    public int getRate() {
+        return rate;
+    }
+
+    public void setRate(int rate) {
+        this.rate = rate;
+    }
+
     @XmlTransient
     public Collection<Reservation> getReservationCollection() {
         return reservationCollection;
@@ -191,6 +205,7 @@ public class Place implements Serializable {
                 + "<parkId>"+parkId+"</parkId>"
                 + "<description>"+description+"</description>"
                 + "<price>"+price+"</price>"
+                + "<rate>"+rate+"</rate>"
                 + "</place>";
     }
     
