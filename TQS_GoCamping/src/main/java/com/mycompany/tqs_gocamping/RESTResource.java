@@ -20,7 +20,10 @@ public class RESTResource {
     //http://deti-tqs-08.ua.pt:8080/TQS_GoCamping/webresources/camping/full/as/sd/df/fg/gh
 
     @PersistenceContext(unitName = "com.mycompany_TQS_GoCamping_war_1.0-SNAPSHOTPU")
-    private EntityManager em;
+    public EntityManager em;
+    
+    public PlaceClientFactory placeFactory = new PlaceClientFactory();
+    public UserClientFactory userFactory = new UserClientFactory();
     
     private String resultGenerator(List<Place> res){
         StringBuilder sb = new StringBuilder();
@@ -104,7 +107,7 @@ public class RESTResource {
                         .getResultList();
                 return "<places>"+resultGenerator(results)+"</places>";
         }
-        PlaceClient pc = new PlaceClient();
+        PlaceClient pc = placeFactory.getPlaceClient();
         return pc.findAll_XML(String.class);
     }
     
@@ -138,7 +141,7 @@ public class RESTResource {
         if(results.size()>0){
             return "False";
         }
-        UserClient pc = new UserClient();
+        UserClient pc = userFactory.getUserClient();
         pc.create_XML("<user>"
                         + "<name>"+user+"</name>"
                         + "<password>"+password+"</password>"
@@ -146,4 +149,13 @@ public class RESTResource {
                     + "</user>");
         return "True";
     }
+    
+    public void setUserClientFactory(UserClientFactory ucf) {
+        this.userFactory = ucf;
+    }
+    
+    public void setPlaceClientFactory(PlaceClientFactory pcf) {
+        this.placeFactory = pcf;
+    }
+    
 }
