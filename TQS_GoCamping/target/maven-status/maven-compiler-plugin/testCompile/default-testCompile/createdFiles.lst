@@ -1,0 +1,6 @@
+com\mycompany\tqs_gocamping\tests\ParkTest.class
+com\mycompany\tqs_gocamping\tests\CampingManagedBeanTest.class
+com\mycompany\tqs_gocamping\tests\ReservationTest.class
+com\mycompany\tqs_gocamping\tests\RESTResourceMockTest.class
+com\mycompany\tqs_gocamping\tests\UserTest.class
+com\mycompany\tqs_gocamping\tests\PlaceTest.class
