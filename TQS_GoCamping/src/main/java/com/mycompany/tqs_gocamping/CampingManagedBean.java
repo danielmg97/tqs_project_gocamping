@@ -215,6 +215,7 @@ public class CampingManagedBean {
                     p.setParkId(pk);
                     p.setPic(eElement.getElementsByTagName("pic").item(0).getTextContent());
                     p.setPrice(Float.parseFloat(eElement.getElementsByTagName("price").item(0).getTextContent()));
+                    p.setRate(Integer.parseInt(eElement.getElementsByTagName("rate").item(0).getTextContent()));
                     places.add(p);
                 }
             }
