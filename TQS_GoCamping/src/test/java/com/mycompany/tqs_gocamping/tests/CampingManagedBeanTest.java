@@ -50,9 +50,9 @@ public class CampingManagedBeanTest {
     public void testRegisterUserAlreadyExists() throws Exception {
         System.out.println("register User already exists");
         CampingManagedBean instance = new CampingManagedBean();
-        instance.setUser("miguelinho");
+        instance.setUser("tqs");
         instance.setPassword("1234");
-        instance.setEmail("miguelinho@hotmailzinho.com");       
+        instance.setEmail("tqs@ua.com");       
      
 
         instance.register();

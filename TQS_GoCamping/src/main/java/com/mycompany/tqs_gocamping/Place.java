@@ -35,7 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Place.findAll", query = "SELECT p FROM Place p")
     , @NamedQuery(name = "Place.findById", query = "SELECT p FROM Place p WHERE p.id = :id")
-    , @NamedQuery(name = "Place.findByName", query = "SELECT p FROM Place p WHERE p.name = :name")
+    , @NamedQuery(name = "Place.findByName", query = "SELECT p FROM Place p WHERE p.name = :type")
     , @NamedQuery(name = "Place.findByCapacity", query = "SELECT p FROM Place p WHERE p.capacity = :capacity")
     , @NamedQuery(name = "Place.findByPrice", query = "SELECT p FROM Place p WHERE p.price = :price")
     , @NamedQuery(name = "Place.findByPic", query = "SELECT p FROM Place p WHERE p.pic = :pic")

@@ -4,8 +4,13 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import java.io.IOException;
 import java.io.StringReader;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -41,11 +46,11 @@ public class CampingManagedBean {
 
     public CampingManagedBean() {
         types.add("Tenda");
-        types.add("Tenda Média");
-        types.add("Tenda Família");
+        types.add("Tenda Media");
+        types.add("Tenda Familia");
         types.add("Casa");
-        types.add("Casa Média");
-        types.add("Casa Família");
+        types.add("Casa Media");
+        types.add("Casa Familia");
     } 
     
     public String register() throws IOException{
@@ -148,17 +153,35 @@ public class CampingManagedBean {
         this.results = results;
     }
     
-    public String moveToSearchPage() throws ParserConfigurationException, SAXException, IOException{
+    public String moveToSearchPage() throws ParserConfigurationException, SAXException, IOException, ParseException{
         setResults(getPlaces());
         return "searchPage";
     }
     
-    public List<Place> getPlaces() throws ParserConfigurationException, SAXException, IOException {
+    public List<Place> getPlaces() throws ParserConfigurationException, SAXException, IOException, ParseException {
         Client c = Client.create();
         String xmlRecords = "";
-        if(destination!=null && type!=null){
-            WebResource wr = c.resource("http://deti-tqs-08.ua.pt:8080/TQS_GoCamping/webresources/camping/full/"+destination+"/"+arrivalDate+"/"+leavingDate+"/"+type+"/"+people);
+        DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+        Date date = new Date();
+        if(destination!=null && type!=null ){
+            if(arrivalDate==null)
+                arrivalDate=(dateFormat.format(date)); //2016/11/16 12:08:43
+            else {
+                DateFormat df = new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy", Locale.ENGLISH);
+                Date result =  df.parse(arrivalDate);
+                arrivalDate = dateFormat.format(result);
+            }
+            if(leavingDate==null)
+                leavingDate=(dateFormat.format(date));
+            else {
+                DateFormat df = new SimpleDateFormat("EEE MMM dd kk:mm:ss z yyyy", Locale.ENGLISH);
+                Date result =  df.parse(leavingDate);
+                leavingDate = dateFormat.format(result);
+            }
+            
+            WebResource wr = c.resource("http://deti-tqs-08.ua.pt:8080/TQS_GoCamping/webresources/camping/full/"+destination+"/"+arrivalDate.replaceAll("/","-")+"/"+leavingDate.replaceAll("/","-")+"/"+type+"/"+people);
             xmlRecords = wr.get(String.class);
+            
         }
         else if(destination!=null && type==null){
             WebResource wr = c.resource("http://deti-tqs-08.ua.pt:8080/TQS_GoCamping/webresources/camping/noType/"+destination+"/"+arrivalDate+"/"+leavingDate+"/"+people);
@@ -171,6 +194,8 @@ public class CampingManagedBean {
         else if(destination==null && type==null){
             WebResource wr = c.resource("http://deti-tqs-08.ua.pt:8080/TQS_GoCamping/webresources/camping/nothing/"+arrivalDate+"/"+leavingDate+"/"+people);
             xmlRecords = wr.get(String.class);
+        }else{
+            xmlRecords= "<place><id>11</id><name>Casa Familia</name><capacity>4</capacity><pic>https://static2.visitestonia.com/images/3073504/DSC_3225_.jpg</pic><parkId><park><id>48</id><name>Wallace Nature Reserve</name><address>Ap #667-8018 Ut Avenue</address><pic> https://www.montesinho.com/images/backgrounds/background2.jpg</pic></park></parkId><description>muito bom</description><price>419.68</price><rate>1</rate></place>";
         }
         destination=null;
         type=null;
